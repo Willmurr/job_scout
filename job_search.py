@@ -1,0 +1,66 @@
+import requests
+import os
+import json
+from dotenv import load_dotenv
+
+load_dotenv()
+
+RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
+CACHE_FILE = "job_cache.json"
+
+def load_cache():
+    if os.path.exists(CACHE_FILE):
+        with open(CACHE_FILE, "r") as f:
+            return json.load(f)
+    return {}
+
+def save_cache(cache):
+    with open(CACHE_FILE, "w") as f:
+        json.dump(cache, f, indent=2)
+
+def search_jobs(role, location, num_results=10):
+    cache = load_cache()
+    cache_key = f"{role}_{location}_{num_results}"
+
+    if cache_key in cache:
+        print("Loaded from cache.")
+        return cache[cache_key]
+
+    url = "https://jsearch.p.rapidapi.com/search"
+    headers = {
+        "x-rapidapi-host": "jsearch.p.rapidapi.com",
+        "x-rapidapi-key": RAPIDAPI_KEY
+    }
+    params = {
+        "query": f"{role} in {location}",
+        "page": "1",
+        "num_pages": "1",
+        "date_posted": "all"
+    }
+
+    response = requests.get(url, headers=headers, params=params)
+    response.raise_for_status()
+    data = response.json()
+
+    jobs = []
+    for result in data.get("data", []):
+        jobs.append({
+            "title": result.get("job_title"),
+            "company": result.get("employer_name"),
+            "location": result.get("job_city") or result.get("job_country"),
+            "description": result.get("job_description"),
+            "url": result.get("job_apply_link"),
+            "source": result.get("job_publisher")
+        })
+
+    cache[cache_key] = jobs
+    save_cache(cache)
+    return jobs
+
+if __name__ == "__main__":
+    jobs = search_jobs("credit analyst", "London")
+    for job in jobs[:3]:
+        print(f"\n{job['title']} at {job['company']}")
+        print(f"Location: {job['location']}")
+        print(f"Source: {job['source']}")
+        print(f"URL: {job['url']}")
