@@ -304,7 +304,7 @@ if "results" in st.session_state:
                     showlegend=False,
                     margin=dict(l=20, r=20, t=30, b=20)
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, use_container_width=True, key="radar_" + str(i))
 
         col5, col6 = st.columns([1, 4])
         with col5:
