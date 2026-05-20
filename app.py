@@ -11,6 +11,21 @@ from matcher import rank_jobs, suggest_cv_improvements, suggest_target_roles
 from cover_letter import generate_cover_letter
 
 st.set_page_config(page_title="Job Scout", page_icon="Target", layout="wide")
+
+# Validate secrets are present
+_anthropic_key = st.secrets.get("ANTHROPIC_API_KEY") or os.getenv("ANTHROPIC_API_KEY")
+_rapidapi_key = st.secrets.get("RAPIDAPI_KEY") or os.getenv("RAPIDAPI_KEY")
+if not _anthropic_key or not _rapidapi_key:
+    st.error(
+        "**Missing API keys.** Please add the following to your Streamlit secrets:\n\n"
+        "```toml\n"
+        "ANTHROPIC_API_KEY = \"your-key\"\n"
+        "RAPIDAPI_KEY = \"your-key\"\n"
+        "```\n\n"
+        f"Status: ANTHROPIC_API_KEY={'found' if _anthropic_key else '**MISSING**'}  |  "
+        f"RAPIDAPI_KEY={'found' if _rapidapi_key else '**MISSING**'}"
+    )
+    st.stop()
 st.title("Job Scout")
 st.subheader("AI-powered job matching and cover letter generation")
 
