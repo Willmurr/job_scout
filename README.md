@@ -1,5 +1,7 @@
 # Job Scout
 
+**Live app: [jobscout-fvs5f92lrdvtryjsu95zqv.streamlit.app](https://jobscout-fvs5f92lrdvtryjsu95zqv.streamlit.app)**
+
 AI-powered job matching and cover letter generation. Upload your CV, search real job listings, and get every role scored against your skills, experience, and location.
 
 ## Features
