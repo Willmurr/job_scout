@@ -121,52 +121,44 @@ if "results" not in st.session_state:
     </div>
     """, unsafe_allow_html=True)
 
-    c1, c2, c3 = st.columns(3)
-    card_style = (
-        "background:#495057; border-radius:12px; padding:1.4rem 1.2rem; "
-        "color:#ffffff; min-height:155px;"
-    )
-    with c1:
-        st.markdown(f"""
-        <div style="{card_style}">
+    st.markdown("""
+    <div style="display:flex; gap:1rem; margin-bottom:1rem;">
+        <div style="flex:1; background:#495057; border-radius:12px; padding:1.4rem 1.2rem; color:#ffffff;">
             <div style="font-size:1.6rem; margin-bottom:0.5rem;">1</div>
             <h4 style="margin:0 0 0.4rem; color:#ffffff;">Upload your CV</h4>
-            <p style="font-size:0.9rem; margin:0;">
-                PDF or Word. Claude reads your experience, skills, and background automatically.
-            </p>
-        </div>""", unsafe_allow_html=True)
-    with c2:
-        st.markdown(f"""
-        <div style="{card_style}">
+            <p style="font-size:0.9rem; margin:0;">PDF or Word. Claude reads your experience, skills, and background automatically.</p>
+        </div>
+        <div style="flex:1; background:#495057; border-radius:12px; padding:1.4rem 1.2rem; color:#ffffff;">
             <div style="font-size:1.6rem; margin-bottom:0.5rem;">2</div>
             <h4 style="margin:0 0 0.4rem; color:#ffffff;">Choose a role</h4>
-            <p style="font-size:0.9rem; margin:0;">
-                Search a specific title, or use <strong>Find best fit</strong> for AI-suggested roles.
-            </p>
-        </div>""", unsafe_allow_html=True)
-    with c3:
-        st.markdown(f"""
-        <div style="{card_style}">
+            <p style="font-size:0.9rem; margin:0;">Search a specific title, or use <strong>Find best fit</strong> for AI-suggested roles.</p>
+        </div>
+        <div style="flex:1; background:#495057; border-radius:12px; padding:1.4rem 1.2rem; color:#ffffff;">
             <div style="font-size:1.6rem; margin-bottom:0.5rem;">3</div>
             <h4 style="margin:0 0 0.4rem; color:#ffffff;">Get ranked matches</h4>
-            <p style="font-size:0.9rem; margin:0;">
-                Every job scored across role, experience, skills, and location — cover letters on demand.
-            </p>
-        </div>""", unsafe_allow_html=True)
+            <p style="font-size:0.9rem; margin:0;">Every job scored across role, experience, skills, and location — cover letters on demand.</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("**What you get per match**")
 
-    f1, f2, f3, f4 = st.columns(4)
-    feat_style = "background:#5a6268; border-radius:8px; padding:0.9rem; text-align:center; color:#ffffff;"
-    with f1:
-        st.markdown(f'<div style="{feat_style}"><strong>Match score</strong><br><span style="font-size:0.85rem;">0–100 across 4 dimensions</span></div>', unsafe_allow_html=True)
-    with f2:
-        st.markdown(f'<div style="{feat_style}"><strong>Strengths & gaps</strong><br><span style="font-size:0.85rem;">With actionable tips to close each gap</span></div>', unsafe_allow_html=True)
-    with f3:
-        st.markdown(f'<div style="{feat_style}"><strong>Cover letter</strong><br><span style="font-size:0.85rem;">Generated for any job in one click</span></div>', unsafe_allow_html=True)
-    with f4:
-        st.markdown(f'<div style="{feat_style}"><strong>CV improvements</strong><br><span style="font-size:0.85rem;">Tailored to your top matches</span></div>', unsafe_allow_html=True)
+    st.markdown("""
+    <div style="display:flex; gap:1rem; margin-bottom:1rem;">
+        <div style="flex:1; background:#5a6268; border-radius:8px; padding:0.9rem; text-align:center; color:#ffffff;">
+            <strong>Match score</strong><br><span style="font-size:0.85rem;">0–100 across 4 dimensions</span>
+        </div>
+        <div style="flex:1; background:#5a6268; border-radius:8px; padding:0.9rem; text-align:center; color:#ffffff;">
+            <strong>Strengths &amp; gaps</strong><br><span style="font-size:0.85rem;">With actionable tips to close each gap</span>
+        </div>
+        <div style="flex:1; background:#5a6268; border-radius:8px; padding:0.9rem; text-align:center; color:#ffffff;">
+            <strong>Cover letter</strong><br><span style="font-size:0.85rem;">Generated for any job in one click</span>
+        </div>
+        <div style="flex:1; background:#5a6268; border-radius:8px; padding:0.9rem; text-align:center; color:#ffffff;">
+            <strong>CV improvements</strong><br><span style="font-size:0.85rem;">Tailored to your top matches</span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown(
