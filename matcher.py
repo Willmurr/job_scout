@@ -6,8 +6,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+def _get_secret(key):
+    try:
+        import streamlit as st
+        return st.secrets[key]
+    except Exception:
+        return os.getenv(key)
+
 def score_job(profile, job):
-    client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+    client = anthropic.Anthropic(api_key=_get_secret("ANTHROPIC_API_KEY"))
     prompt = f"""You are a senior recruiter assessing candidate-job fit. Be precise and discriminating — most candidates are not a strong fit for any given role.
 
 CANDIDATE PROFILE:
@@ -116,7 +123,7 @@ def rank_jobs(profile, jobs):
     return scored_jobs
 
 def suggest_target_roles(profile) -> list:
-    client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+    client = anthropic.Anthropic(api_key=_get_secret("ANTHROPIC_API_KEY"))
     prompt = f"""You are a career advisor. Based on this candidate's profile, suggest exactly 4 specific job titles they should search for.
 
 CANDIDATE PROFILE:
@@ -146,7 +153,7 @@ Return ONLY valid JSON array, no other text."""
 
 
 def suggest_cv_improvements(profile, results):
-    client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+    client = anthropic.Anthropic(api_key=_get_secret("ANTHROPIC_API_KEY"))
     top_jobs = [r["job"] for r in results[:3]]
     jobs_text = "\n".join([
         f"- {j.get('title')} at {j.get('company')}: {str(j.get('description',''))[:400]}"

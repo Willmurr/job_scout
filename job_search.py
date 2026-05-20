@@ -5,7 +5,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
+def _get_secret(key):
+    try:
+        import streamlit as st
+        return st.secrets[key]
+    except Exception:
+        return os.getenv(key)
+
 CACHE_FILE = "job_cache.json"
 
 def load_cache():
@@ -29,7 +35,7 @@ def search_jobs(role, location, num_results=10):
     url = "https://jsearch.p.rapidapi.com/search"
     headers = {
         "x-rapidapi-host": "jsearch.p.rapidapi.com",
-        "x-rapidapi-key": RAPIDAPI_KEY
+        "x-rapidapi-key": _get_secret("RAPIDAPI_KEY")
     }
     params = {
         "query": f"{role} in {location}",
