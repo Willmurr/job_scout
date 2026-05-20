@@ -23,3 +23,6 @@ htmlcov/
 cv_cache.json
 job_cache.json
 *.pdf
+kaggle_data/
+sample_cvs/
+test_results/

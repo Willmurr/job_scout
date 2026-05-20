@@ -50,11 +50,27 @@ def search_jobs(role, location, num_results=10):
             "location": result.get("job_city") or result.get("job_country"),
             "description": result.get("job_description"),
             "url": result.get("job_apply_link"),
-            "source": result.get("job_publisher")
+            "source": result.get("job_publisher"),
+            "date_posted": result.get("job_posted_at_datetime_utc"),
         })
 
-    cache[cache_key] = jobs
-    save_cache(cache)
+    if not jobs:
+        print(f"WARNING: JSearch returned 0 results for '{role}' in '{location}'. Trying Adzuna fallback...")
+        try:
+            from adzuna_search import search_adzuna
+            jobs = search_adzuna(role, location, num_results)
+            if jobs:
+                print(f"Adzuna returned {len(jobs)} results.")
+            else:
+                print("Adzuna also returned 0 results.")
+                print("Try: London, New York, Sydney, Toronto, Dublin, Madrid, Barcelona, Paris, Berlin.")
+        except Exception as e:
+            print(f"Adzuna fallback failed: {e}")
+
+    if jobs:
+        cache[cache_key] = jobs
+        save_cache(cache)
+
     return jobs
 
 if __name__ == "__main__":

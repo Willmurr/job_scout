@@ -4,3 +4,6 @@ pdfplumber
 python-docx
 python-dotenv
 requests
+kaggle
+pandas
+plotly

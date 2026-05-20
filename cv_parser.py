@@ -29,15 +29,7 @@ def extract_cv_text(file_path):
     else:
         raise ValueError("Unsupported file format. Please use PDF or DOCX.")
 
-def parse_cv(file_path):
-    cache_file = "cv_cache.json"
-    if os.path.exists(cache_file):
-        print("Loaded CV from cache.")
-        with open(cache_file, "r") as f:
-            return json.load(f)
-
-    raw_text = extract_cv_text(file_path)
-
+def parse_cv_text(raw_text: str) -> dict:
     prompt = (
         "You are a CV parser. Extract the following information and return it as a JSON object:\n\n"
         "- name: Full name\n"
@@ -54,20 +46,38 @@ def parse_cv(file_path):
         "CV:\n" + raw_text
     )
 
-    print("Calling Claude API...")
-    message = client.messages.create(
-        model="claude-haiku-4-5-20251001",
-        max_tokens=2048,
-        messages=[{"role": "user", "content": prompt}]
-    )
-    print("Response received.")
+    import time
+    for attempt in range(4):
+        try:
+            print("Calling Claude API...")
+            message = client.messages.create(
+                model="claude-haiku-4-5-20251001",
+                max_tokens=2048,
+                messages=[{"role": "user", "content": prompt}]
+            )
+            print("Response received.")
+            response_text = message.content[0].text.strip()
+            start = response_text.find("{")
+            end = response_text.rfind("}") + 1
+            return json.loads(response_text[start:end])
+        except anthropic.APIStatusError as e:
+            if e.status_code == 529 and attempt < 3:
+                wait = 10 * (attempt + 1)
+                print(f"API overloaded, retrying in {wait}s...")
+                time.sleep(wait)
+            else:
+                raise
 
-    response_text = message.content[0].text.strip()
-    start = response_text.find("{")
-    end = response_text.rfind("}") + 1
-    response_text = response_text[start:end]
 
-    profile = json.loads(response_text)
+def parse_cv(file_path):
+    cache_file = "cv_cache.json"
+    if os.path.exists(cache_file):
+        print("Loaded CV from cache.")
+        with open(cache_file, "r") as f:
+            return json.load(f)
+
+    raw_text = extract_cv_text(file_path)
+    profile = parse_cv_text(raw_text)
 
     with open(cache_file, "w") as f:
         json.dump(profile, f, indent=2)
