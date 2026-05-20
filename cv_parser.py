@@ -7,8 +7,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-
 def extract_text_from_pdf(file_path):
     text = ""
     with pdfplumber.open(file_path) as pdf:
@@ -46,6 +44,7 @@ def parse_cv_text(raw_text: str) -> dict:
         "CV:\n" + raw_text
     )
 
+    client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
     import time
     for attempt in range(4):
         try:
