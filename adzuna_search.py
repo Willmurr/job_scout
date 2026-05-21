@@ -4,8 +4,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-ADZUNA_APP_ID = os.getenv("ADZUNA_APP_ID")
-ADZUNA_APP_KEY = os.getenv("ADZUNA_APP_KEY")
+def _get_secret(key):
+    try:
+        import streamlit as st
+        return st.secrets[key]
+    except Exception:
+        return os.getenv(key)
 
 COUNTRY_CODE_MAP = {
     "united kingdom": "gb", "uk": "gb", "england": "gb", "london": "gb",
@@ -43,15 +47,18 @@ def infer_country_code(location: str) -> str:
 
 def search_adzuna(role: str, location: str, num_results: int = 10) -> list:
     """Search Adzuna API. Returns list of job dicts matching job_search.py format."""
-    if not ADZUNA_APP_ID or not ADZUNA_APP_KEY:
+    app_id = _get_secret("ADZUNA_APP_ID")
+    app_key = _get_secret("ADZUNA_APP_KEY")
+
+    if not app_id or not app_key:
         print("Adzuna credentials not configured (ADZUNA_APP_ID / ADZUNA_APP_KEY missing).")
         return []
 
     country = infer_country_code(location)
     url = f"https://api.adzuna.com/v1/api/jobs/{country}/search/1"
     params = {
-        "app_id": ADZUNA_APP_ID,
-        "app_key": ADZUNA_APP_KEY,
+        "app_id": app_id,
+        "app_key": app_key,
         "results_per_page": num_results,
         "what": role,
         "where": location,
