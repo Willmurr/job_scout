@@ -33,6 +33,12 @@ COUNTRY_CODE_MAP = {
     "south africa": "za", "cape town": "za", "johannesburg": "za",
 }
 
+COUNTRY_NAMES = {
+    "united kingdom", "uk", "england", "united states", "usa", "australia",
+    "canada", "spain", "germany", "france", "netherlands", "italy", "ireland",
+    "new zealand", "india", "brazil", "poland", "russia", "singapore", "south africa",
+}
+
 
 def infer_country_code(location: str) -> str:
     """Infer Adzuna country code from a location string."""
@@ -56,14 +62,16 @@ def search_adzuna(role: str, location: str, num_results: int = 10) -> list:
 
     country = infer_country_code(location)
     url = f"https://api.adzuna.com/v1/api/jobs/{country}/search/1"
+    is_country_search = location.strip().lower() in COUNTRY_NAMES
     params = {
         "app_id": app_id,
         "app_key": app_key,
         "results_per_page": num_results,
         "what": role,
-        "where": location,
         "content-type": "application/json",
     }
+    if not is_country_search:
+        params["where"] = location
 
     try:
         response = requests.get(url, params=params, timeout=15)
