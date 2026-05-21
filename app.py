@@ -13,8 +13,12 @@ from cover_letter import generate_cover_letter
 st.set_page_config(page_title="Job Scout", page_icon="Target", layout="wide")
 
 # Validate secrets are present
-_anthropic_key = st.secrets.get("ANTHROPIC_API_KEY") or os.getenv("ANTHROPIC_API_KEY")
-_rapidapi_key = st.secrets.get("RAPIDAPI_KEY") or os.getenv("RAPIDAPI_KEY")
+try:
+    _anthropic_key = st.secrets.get("ANTHROPIC_API_KEY") or os.getenv("ANTHROPIC_API_KEY")
+    _rapidapi_key = st.secrets.get("RAPIDAPI_KEY") or os.getenv("RAPIDAPI_KEY")
+except Exception:
+    _anthropic_key = os.getenv("ANTHROPIC_API_KEY")
+    _rapidapi_key = os.getenv("RAPIDAPI_KEY")
 if not _anthropic_key or not _rapidapi_key:
     st.error(
         "**Missing API keys.** Please add the following to your Streamlit secrets:\n\n"
