@@ -26,7 +26,7 @@ def save_cache(cache):
 
 def search_jobs(role, location, num_results=10):
     cache = load_cache()
-    cache_key = f"{role}_{location}_{num_results}"
+    cache_key = f"{role.lower()}_{location.lower()}_{num_results}"
 
     if cache_key in cache:
         print("Loaded from cache.")
