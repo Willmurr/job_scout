@@ -5,7 +5,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+def _get_secret(key):
+    try:
+        import streamlit as st
+        return st.secrets[key]
+    except Exception:
+        return os.getenv(key)
 
 def generate_cover_letter(profile, job, score):
     strengths = ", ".join(score.get("strengths", [])[:3])
@@ -33,6 +38,7 @@ def generate_cover_letter(profile, job, score):
         + "Write the cover letter only, no additional commentary."
     )
 
+    client = anthropic.Anthropic(api_key=_get_secret("ANTHROPIC_API_KEY"))
     message = client.messages.create(
         model="claude-haiku-4-5-20251001",
         max_tokens=1024,
